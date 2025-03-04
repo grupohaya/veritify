@@ -1,0 +1,31 @@
+services:
+ veritify-os:
+  build:
+   context: ./
+   dockerfile: Dockerfile
+  image: i-veritify-os
+  container_name: c-veritify-os
+  restart: always
+  ports:
+   - "5000:5000"
+  env_file:
+   - ./.env  
+  volumes:
+   - ./src:/usr/src/veritify/src
+  depends_on:
+   - mongodb-os
+  command: npm run start:prod
+
+ mongodb-os:
+  image: mongo:6.0
+  container_name: c-mongodb-os
+  restart: always  
+  environment:
+   MONGO_INITDB_ROOT_USERNAME: admin
+   MONGO_INITDB_ROOT_PASSWORD: veritify
+   MONGO_INITDB_DATABASE: veritify
+  volumes:
+   - ./mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
